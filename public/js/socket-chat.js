@@ -2,7 +2,7 @@ var socket = io();
 
 var params = new URLSearchParams(window.location.search);
 
-var user = { name: params.get('name')}
+var user = { name: params.get('name') , sala: params.get('sala')}
 
 if(!params.has('name') || !params.has('sala')){
     window.location = 'index.html'

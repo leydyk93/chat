@@ -7,19 +7,17 @@ const { createMessage } = require('../utilities/utilities')
 let users = new Users()
 io.on('connection', (client) => {
 
-    console.log('Usuario conectado');
-
     client.on('connectChat', (data, callback)=>{
         
-        if(!data.name){
+        if(!data.name || !data.sala){
             callback({
                 error: true,
-                message: "Es necesario el nombre del usuario"
+                message: "Es necesario el nombre y una sala para establecer la conexión"
             })
         }
-
-        let pers = users.addPersons(client.id, data.name)
-        client.broadcast.emit('listPersons', users.getPersons())
+        client.join(data.sala)
+        let pers = users.addPersons(client.id, data.name, data.sala)
+        client.broadcast.to(data.sala).emit('listPersons', users.getPersonsRoom(data.sala))
         callback(pers)
 
     })
@@ -29,13 +27,13 @@ io.on('connection', (client) => {
 
         let message = createMessage(per.name, data.message)
        
-        client.broadcast.emit('createMessage', message)
+        client.broadcast.to(per.sala).emit('createMessage', message)
     })
 
     client.on('disconnect', ()=>{
-        let per = users.deletePerson(client.id)
-        client.broadcast.emit('listPersons', users.getPersons())
-        client.broadcast.emit('createMessage', createMessage('Admin', ` El usuario ${per[0].name} ha abandonado el chat`))
+        let per = users.deletePerson(client.id)[0]
+        client.broadcast.to(per.sala).emit('listPersons', users.getPersonsRoom(per.sala))
+        client.broadcast.to(per.sala).emit('createMessage', createMessage('Admin', ` El usuario ${per.name} ha abandonado el chat`))
     })
 
     //mensajes privado

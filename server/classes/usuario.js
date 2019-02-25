@@ -6,8 +6,8 @@ class Users {
         this.persons = []
     }
 
-    addPersons(id, name){
-        let person = { id, name };
+    addPersons(id, name, sala){
+        let person = { id, name, sala};
 
         this.persons.push(person)
 
@@ -23,8 +23,9 @@ class Users {
         return  pers
     }
 
-    getPersonsRoom(){
-
+    getPersonsRoom(sala){
+        let perSala = this.persons.filter( ele=>ele.sala === sala )
+        return perSala
     }
 
     deletePerson(id){
