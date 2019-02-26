@@ -11,7 +11,7 @@ class Users {
 
         this.persons.push(person)
 
-        return this.persons
+        return this.getPersonsRoom(sala)
     }
 
     getPersons(){
@@ -24,7 +24,7 @@ class Users {
     }
 
     getPersonsRoom(sala){
-        let perSala = this.persons.filter( ele=>ele.sala === sala )
+        let perSala = this.persons.filter( ele => ele.sala === sala )
         return perSala
     }
 

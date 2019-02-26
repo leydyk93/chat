@@ -12,8 +12,9 @@ if(!params.has('name') || !params.has('sala')){
 socket.on('connect', function() {
     console.log('Conectado al servidor');
     socket.emit('connectChat', user, function(resp){
-
-        console.log('Usuarios conectados', resp)
+        //console.log('Usuarios conectados', resp)
+        renderUSer(resp)
+        
     })
 });
 
@@ -28,7 +29,9 @@ socket.on('disconnect', function() {
 // })
 
 socket.on('createMessage', (data)=>{
-    console.log(data)
+    ///console.log(data)
+    renderMessage(data, false)
+    scrollBottom()
 })
 
 socket.on('privateMessage', (data)=>{
@@ -36,5 +39,6 @@ socket.on('privateMessage', (data)=>{
 })
 
 socket.on('listPersons', (data)=>{
-    console.log(data, "lista de personas")
+    renderUSer(data)
+    //console.log(data, "lista de personas")
 })

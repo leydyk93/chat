@@ -18,16 +18,19 @@ io.on('connection', (client) => {
         client.join(data.sala)
         let pers = users.addPersons(client.id, data.name, data.sala)
         client.broadcast.to(data.sala).emit('listPersons', users.getPersonsRoom(data.sala))
+        client.broadcast.to(data.sala).emit('createMessage', createMessage('Admin', `El usuario ${data.name} se ha unido al chat`))
         callback(pers)
 
     })
 
-    client.on('createMessage', (data)=>{
+    client.on('createMessage', (data, callback)=>{
         let per = users.getPerson(client.id)
 
         let message = createMessage(per.name, data.message)
-       
+        
         client.broadcast.to(per.sala).emit('createMessage', message)
+
+        callback(message)
     })
 
     client.on('disconnect', ()=>{
